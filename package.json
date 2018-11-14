@@ -25,5 +25,14 @@
   "bugs": {
     "url": "https://github.com/frcnetto/find-the-pet/issues"
   },
-  "homepage": "https://github.com/frcnetto/find-the-pet#readme"
+  "homepage": "https://github.com/frcnetto/find-the-pet#readme",
+  "dependencies": {
+    "mongoose": "^5.3.12",
+    "restify": "^7.2.2",
+    "restify-errors": "^6.1.1"
+  },
+  "devDependencies": {
+    "@types/mongoose": "^5.3.1",
+    "@types/restify-errors": "^4.3.3"
+  }
 }
