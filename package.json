@@ -1,0 +1,29 @@
+{
+  "name": "find-the-pet.backend",
+  "version": "1.0.0",
+  "description": "The backend of the Find the Pet project.",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/frcnetto/find-the-pet.git"
+  },
+  "keywords": [
+    "find",
+    "the",
+    "pet",
+    "backend",
+    "node",
+    "restify",
+    "typescript",
+    "javascript"
+  ],
+  "author": "Netto Cavalcante",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/frcnetto/find-the-pet/issues"
+  },
+  "homepage": "https://github.com/frcnetto/find-the-pet#readme"
+}
