@@ -23,7 +23,7 @@ export class Server {
             try {
 
                 this.application = restify.createServer( {
-                    name: 'the-livery-api',
+                    name: 'find-the-pet',
                     version: '0.0.1'
                 } );
 

@@ -1,5 +1,5 @@
-import { Router } from '../common/router'
-import * as restify from 'restify';
+import { Router } from '../../common/router'
+import restify from 'restify';
 import { User } from './users.model';
 import { NotFoundError } from 'restify-errors';
 
@@ -29,10 +29,23 @@ class UsersRouter extends Router {
         } );
 
         application.post( this.usersNode, ( req, res, next ) => {
-            let user = new User( req.body );
-            user.save()
-                .then( this.render( res, next ) )
-                .catch( next );;
+
+            if ( req.body instanceof Array ) {
+                let locations = new User();
+
+                locations.collection.insert( req.body )
+                    .then( this.render( res, next ) )
+                    .catch( next );
+
+            } else {
+
+                let location = new User( req.body );
+
+                location.save()
+                    .then( this.render( res, next ) )
+                    .catch( next );
+
+            }
         } );
 
         application.put( this.usersIdNode, ( req, res, next ) => {
