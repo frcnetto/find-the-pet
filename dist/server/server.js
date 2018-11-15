@@ -19,7 +19,7 @@ class Server {
         return new Promise((resolve, reject) => {
             try {
                 this.application = restify_1.default.createServer({
-                    name: 'the-livery-api',
+                    name: 'find-the-pet',
                     version: '0.0.1'
                 });
                 this.application.use(restify_1.default.plugins.queryParser());
