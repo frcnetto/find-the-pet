@@ -1,50 +1,47 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const router_1 = require("../../common/router");
-const users_model_1 = require("./users.model");
+const pets_model_1 = require("./pets.model");
 const restify_errors_1 = require("restify-errors");
-class UsersRouter extends router_1.Router {
+class PetsRouter extends router_1.Router {
     constructor() {
-        super();
-        this.usersNode = '/users';
-        this.usersIdNode = this.usersNode + '/:id';
-        this.on('beforeRender', document => {
-            document.password = undefined;
-        });
+        super(...arguments);
+        this.petsNode = '/users';
+        this.petsIdNode = this.petsNode + '/:id';
     }
     applyRoutes(application) {
-        application.get(this.usersNode, (req, res, next) => {
-            users_model_1.User.find()
+        application.get(this.petsNode, (req, res, next) => {
+            pets_model_1.Pet.find()
                 .then(this.render(res, next))
                 .catch(next);
         });
-        application.get(this.usersIdNode, (req, res, next) => {
-            users_model_1.User.findById(req.params.id)
+        application.get(this.petsIdNode, (req, res, next) => {
+            pets_model_1.Pet.findById(req.params.id)
                 .then(this.render(res, next))
                 .catch(next);
             ;
         });
-        application.post(this.usersNode, (req, res, next) => {
+        application.post(this.petsNode, (req, res, next) => {
             if (req.body instanceof Array) {
-                let users = new users_model_1.User();
-                users.collection.insert(req.body)
+                let pets = new pets_model_1.Pet();
+                pets.collection.insert(req.body)
                     .then(this.render(res, next))
                     .catch(next);
             }
             else {
-                let user = new users_model_1.User(req.body);
-                user.save()
+                let pet = new pets_model_1.Pet(req.body);
+                pet.save()
                     .then(this.render(res, next))
                     .catch(next);
             }
         });
-        application.put(this.usersIdNode, (req, res, next) => {
+        application.put(this.petsIdNode, (req, res, next) => {
             const options = { overwrite: true };
-            users_model_1.User.update({ _id: req.params.id }, req.body, options)
+            pets_model_1.Pet.update({ _id: req.params.id }, req.body, options)
                 .exec()
                 .then(result => {
                 if (result.n) {
-                    return users_model_1.User.findById(req.params.id);
+                    return pets_model_1.Pet.findById(req.params.id);
                 }
                 else {
                     throw new restify_errors_1.NotFoundError('Documento não encontrado.');
@@ -54,15 +51,15 @@ class UsersRouter extends router_1.Router {
                 .catch(next);
             ;
         });
-        application.patch(this.usersIdNode, (req, res, next) => {
+        application.patch(this.petsIdNode, (req, res, next) => {
             const options = { new: true };
-            users_model_1.User.findByIdAndUpdate(req.params.id, req.body, options)
+            pets_model_1.Pet.findByIdAndUpdate(req.params.id, req.body, options)
                 .then(this.render(res, next))
                 .catch(next);
             ;
         });
-        application.del(this.usersIdNode, (req, res, next) => {
-            users_model_1.User.deleteOne({ _id: req.params.id }).exec().then(result => {
+        application.del(this.petsIdNode, (req, res, next) => {
+            pets_model_1.Pet.deleteOne({ _id: req.params.id }).exec().then(result => {
                 console.log(result);
                 if (result.n)
                     res.send(204);
@@ -73,4 +70,4 @@ class UsersRouter extends router_1.Router {
         });
     }
 }
-exports.usersRouter = new UsersRouter();
+exports.petsRouter = new PetsRouter();

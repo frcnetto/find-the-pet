@@ -1,38 +1,36 @@
-import mongoose from 'mongoose';
+import mongoose, { Types } from 'mongoose';
 
 const Schema = mongoose.Schema;
 
 export interface User extends mongoose.Document {
-    name    : string,
-    email   : string,
+    name: string,
+    email: string,
     password: string,
-    age     : number,
-    birth   : Date,
-    active  : boolean
+    age: number,
+    birth: Date,
+    active: boolean
 }
 
 const userSchema = new Schema( {
-    name: {
-        type: String
-    },
+    name: String,
     email: {
-        type  : String,
+        type: String,
         unique: true
     },
     password: {
-        type  : String,
+        type: String,
         select: false
     },
     age: {
         type: Number,
-        min : 0
+        min: 0
     },
     birth: {
         type: Date,
-        max : new Date()
+        max: new Date()
     },
     active: {
-        type   : Boolean,
+        type: Boolean,
         default: 'no'
     }
 } );

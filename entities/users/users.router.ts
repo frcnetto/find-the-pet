@@ -31,17 +31,17 @@ class UsersRouter extends Router {
         application.post( this.usersNode, ( req, res, next ) => {
 
             if ( req.body instanceof Array ) {
-                let locations = new User();
+                let users = new User();
 
-                locations.collection.insert( req.body )
+                users.collection.insert( req.body )
                     .then( this.render( res, next ) )
                     .catch( next );
 
             } else {
 
-                let location = new User( req.body );
+                let user = new User( req.body );
 
-                location.save()
+                user.save()
                     .then( this.render( res, next ) )
                     .catch( next );
 
