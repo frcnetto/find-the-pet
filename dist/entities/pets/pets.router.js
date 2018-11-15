@@ -6,7 +6,7 @@ const restify_errors_1 = require("restify-errors");
 class PetsRouter extends router_1.Router {
     constructor() {
         super(...arguments);
-        this.petsNode = '/users';
+        this.petsNode = '/pets';
         this.petsIdNode = this.petsNode + '/:id';
     }
     applyRoutes(application) {

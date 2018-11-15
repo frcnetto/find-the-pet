@@ -1,20 +1,32 @@
 import mongoose from 'mongoose';
+import { values } from '../../common/values';
 
 const Schema = mongoose.Schema;
 const ObjectId = Schema.Types.ObjectId;
 
 export interface Pet extends mongoose.Document {
-    size_id: any,
-    age_id: any,
-    color_id: any,
+    size: any,
+    age: any,
+    color: any,
+    breed_id: any,
     picture_url: string,
     location_id: any
 }
 
 const petsSchema = new Schema( {
-    size_id: ObjectId,
-    age_id: ObjectId,
-    color_id: ObjectId,
+    size: {
+        type: String,
+        enum: values.sizes
+    },
+    age: {
+        type: String,
+        enum: values.ages
+    },
+    color: {
+        type: String,
+        enum: values.colors
+    },
+    breed_id: ObjectId,
     picture_url: String,
     location_id: ObjectId
 } );

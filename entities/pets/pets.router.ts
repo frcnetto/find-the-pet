@@ -5,7 +5,7 @@ import { NotFoundError } from 'restify-errors';
 
 class PetsRouter extends Router {
 
-    petsNode = '/users';
+    petsNode = '/pets';
     petsIdNode = this.petsNode + '/:id';
 
     applyRoutes( application: restify.Server ) {

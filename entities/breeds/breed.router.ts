@@ -5,7 +5,7 @@ import { NotFoundError } from 'restify-errors';
 
 class BreedsRouter extends Router {
 
-    breedsNode = '/locations';
+    breedsNode = '/breeds';
     breedsIdNode = this.breedsNode + '/:id';
 
     applyRoutes( application: restify.Server ) {
