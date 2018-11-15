@@ -5,12 +5,9 @@ const locations_model_1 = require("./locations.model");
 const restify_errors_1 = require("restify-errors");
 class LocationRouter extends router_1.Router {
     constructor() {
-        super();
+        super(...arguments);
         this.locationsNode = '/locations';
         this.locationsIdNode = this.locationsNode + '/:id';
-        this.on('beforeRender', document => {
-            document.password = undefined;
-        });
     }
     applyRoutes(application) {
         application.get(this.locationsNode, (req, res, next) => {
