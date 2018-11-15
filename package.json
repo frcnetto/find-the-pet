@@ -2,7 +2,7 @@
   "name": "find-the-pet.backend",
   "version": "1.0.0",
   "description": "The backend of the Find the Pet project.",
-  "main": "app.js",
+  "main": "app.ts",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -27,6 +27,7 @@
   },
   "homepage": "https://github.com/frcnetto/find-the-pet#readme",
   "dependencies": {
+    "@types/restify": "^7.2.6",
     "mongoose": "^5.3.12",
     "restify": "^7.2.2",
     "restify-errors": "^6.1.1"
