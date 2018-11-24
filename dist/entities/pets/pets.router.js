@@ -10,6 +10,11 @@ class PetsRouter extends model_router_1.ModelRouter {
     constructor() {
         super(pets_model_1.Pet);
     }
+    prepareOne(query) {
+        return query
+            .populate('breed')
+            .populate('location');
+    }
     envelope(document) {
         let resource = super.envelope(document);
         const breed = document.breed._id ? document.breed._id : document.breed;

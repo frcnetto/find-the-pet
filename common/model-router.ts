@@ -17,6 +17,10 @@ export abstract class ModelRouter<D extends mongoose.Document> extends Router {
         this.pageSize = 10;
     }
 
+    protected prepareOne( query: mongoose.DocumentQuery<D | null, D> ): mongoose.DocumentQuery<D | null, D> {
+        return query;
+    }
+
     envelope( document: any ): any {
         let resource = Object.assign( { _links: {} }, document.toJSON() );
         resource._links.self = `${this.basePath}/${resource._id}`;
@@ -32,7 +36,7 @@ export abstract class ModelRouter<D extends mongoose.Document> extends Router {
             },
             items: documents
         }
-        if ( options.page && options.count, && options.pageSize ) {
+        if ( options.page && options.count && options.pageSize ) {
 
             if ( ( options.count - options.page * options.pageSize ) > 0 ) {
                 resource._links.next = `${this.basePath}?_page=${options.page + 1}`;
@@ -59,7 +63,7 @@ export abstract class ModelRouter<D extends mongoose.Document> extends Router {
     }
 
     findById = ( req: restify.Request, res: restify.Response, next: restify.Next ) => {
-        this.model.findById( req.params.id )
+        this.prepareOne( this.model.findById( req.params.id ) )
             .then( this.render( res, next ) )
             .catch( next );
     }
