@@ -13,17 +13,29 @@ class LocationRouter extends ModelRouter<Location> {
 
     applyRoutes( application: restify.Server ) {
 
-        application.get( this.locationsNode, this.findAll );
+        application.get( this.locationsNode, restify.plugins.conditionalHandler( [
+            { version: '1.0.0', handler: this.findAll }
+        ] ) );
 
-        application.get( this.locationsIdNode, [ this.validateId, this.findById ] );
+        application.get( this.locationsIdNode, restify.plugins.conditionalHandler( [
+            { version: '1.0.0', handler: [ this.validateId, this.findById ] }
+        ] ) );
 
-        application.post( this.locationsNode, this.save );
+        application.post( this.locationsNode, restify.plugins.conditionalHandler( [
+            { version: '1.0.0', handler: this.save }
+        ] ) );
 
-        application.put( this.locationsIdNode, [ this.validateId, this.replace ] );
+        application.put( this.locationsIdNode, restify.plugins.conditionalHandler( [
+            { version: '1.0.0', handler: [ this.validateId, this.replace ] }
+        ] ) );
 
-        application.patch( this.locationsIdNode, [ this.validateId, this.update ] );
+        application.patch( this.locationsIdNode, restify.plugins.conditionalHandler( [
+            { version: '1.0.0', handler: [ this.validateId, this.update ] }
+        ] ) );
 
-        application.del( this.locationsIdNode, [ this.validateId, this.delete ] );
+        application.del( this.locationsIdNode, restify.plugins.conditionalHandler( [
+            { version: '1.0.0', handler: [ this.validateId, this.delete ] }
+        ] ) );
     }
 }
 

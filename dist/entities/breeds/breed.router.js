@@ -1,73 +1,36 @@
 "use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
-const router_1 = require("../../common/router");
+const restify_1 = __importDefault(require("restify"));
 const breed_model_1 = require("./breed.model");
-const restify_errors_1 = require("restify-errors");
-class BreedsRouter extends router_1.Router {
+const model_router_1 = require("../../common/model-router");
+class BreedsRouter extends model_router_1.ModelRouter {
     constructor() {
-        super(...arguments);
+        super(breed_model_1.Breed);
         this.breedsNode = '/breeds';
         this.breedsIdNode = this.breedsNode + '/:id';
     }
     applyRoutes(application) {
-        application.get(this.breedsNode, (req, res, next) => {
-            breed_model_1.Breed.find()
-                .then(this.render(res, next))
-                .catch(next);
-        });
-        application.get(this.breedsIdNode, (req, res, next) => {
-            breed_model_1.Breed.findById(req.params.id)
-                .then(this.render(res, next))
-                .catch(next);
-            ;
-        });
-        application.post(this.breedsNode, (req, res, next) => {
-            if (req.body instanceof Array) {
-                let breeds = new breed_model_1.Breed();
-                breeds.collection.insert(req.body)
-                    .then(this.render(res, next))
-                    .catch(next);
-            }
-            else {
-                let breed = new breed_model_1.Breed(req.body);
-                breed.save()
-                    .then(this.render(res, next))
-                    .catch(next);
-            }
-        });
-        application.put(this.breedsIdNode, (req, res, next) => {
-            const options = { overwrite: true };
-            breed_model_1.Breed.update({ _id: req.params.id }, req.body, options)
-                .exec()
-                .then(result => {
-                if (result.n) {
-                    return breed_model_1.Breed.findById(req.params.id);
-                }
-                else {
-                    throw new restify_errors_1.NotFoundError('Documento não encontrado.');
-                }
-            })
-                .then(this.render(res, next))
-                .catch(next);
-            ;
-        });
-        application.patch(this.breedsIdNode, (req, res, next) => {
-            const options = { new: true };
-            breed_model_1.Breed.findByIdAndUpdate(req.params.id, req.body, options)
-                .then(this.render(res, next))
-                .catch(next);
-            ;
-        });
-        application.del(this.breedsIdNode, (req, res, next) => {
-            breed_model_1.Breed.deleteOne({ _id: req.params.id }).exec().then(result => {
-                console.log(result);
-                if (result.n)
-                    res.send(204);
-                else
-                    throw new restify_errors_1.NotFoundError('Documento não encontrado.');
-                return next();
-            });
-        });
+        application.get(this.breedsNode, restify_1.default.plugins.conditionalHandler([
+            { version: '1.0.0', handler: this.findAll }
+        ]));
+        application.get(this.breedsIdNode, restify_1.default.plugins.conditionalHandler([
+            { version: '1.0.0', handler: [this.validateId, this.findById] }
+        ]));
+        application.post(this.breedsNode, restify_1.default.plugins.conditionalHandler([
+            { version: '1.0.0', handler: this.save }
+        ]));
+        application.put(this.breedsIdNode, restify_1.default.plugins.conditionalHandler([
+            { version: '1.0.0', handler: [this.validateId, this.replace] }
+        ]));
+        application.patch(this.breedsIdNode, restify_1.default.plugins.conditionalHandler([
+            { version: '1.0.0', handler: [this.validateId, this.update] }
+        ]));
+        application.del(this.breedsIdNode, restify_1.default.plugins.conditionalHandler([
+            { version: '1.0.0', handler: [this.validateId, this.delete] }
+        ]));
     }
 }
 exports.breedsRouter = new BreedsRouter();
