@@ -9,29 +9,27 @@ const model_router_1 = require("../../common/model-router");
 class UsersRouter extends model_router_1.ModelRouter {
     constructor() {
         super(users_model_1.User);
-        this.usersNode = '/users';
-        this.usersIdNode = this.usersNode + '/:id';
         this.on('beforeRender', document => {
             document.password = undefined;
         });
     }
     applyRoutes(application) {
-        application.get(this.usersNode, restify_1.default.plugins.conditionalHandler([
+        application.get(this.basePath, restify_1.default.plugins.conditionalHandler([
             { version: '1.0.0', handler: this.findAll }
         ]));
-        application.get(this.usersIdNode, restify_1.default.plugins.conditionalHandler([
+        application.get(this.baseIdPath, restify_1.default.plugins.conditionalHandler([
             { version: '1.0.0', handler: [this.validateId, this.findById] }
         ]));
-        application.post(this.usersNode, restify_1.default.plugins.conditionalHandler([
+        application.post(this.basePath, restify_1.default.plugins.conditionalHandler([
             { version: '1.0.0', handler: this.save }
         ]));
-        application.put(this.usersIdNode, restify_1.default.plugins.conditionalHandler([
+        application.put(this.baseIdPath, restify_1.default.plugins.conditionalHandler([
             { version: '1.0.0', handler: [this.validateId, this.replace] }
         ]));
-        application.patch(this.usersIdNode, restify_1.default.plugins.conditionalHandler([
+        application.patch(this.baseIdPath, restify_1.default.plugins.conditionalHandler([
             { version: '1.0.0', handler: [this.validateId, this.update] }
         ]));
-        application.del(this.usersIdNode, restify_1.default.plugins.conditionalHandler([
+        application.del(this.baseIdPath, restify_1.default.plugins.conditionalHandler([
             { version: '1.0.0', handler: [this.validateId, this.delete] }
         ]));
     }

@@ -8,32 +8,29 @@ class LocationRouter extends ModelRouter<Location> {
         super( Location );
     }
 
-    locationsNode = '/locations';
-    locationsIdNode = this.locationsNode + '/:id';
-
     applyRoutes( application: restify.Server ) {
 
-        application.get( this.locationsNode, restify.plugins.conditionalHandler( [
+        application.get( this.basePath, restify.plugins.conditionalHandler( [
             { version: '1.0.0', handler: this.findAll }
         ] ) );
 
-        application.get( this.locationsIdNode, restify.plugins.conditionalHandler( [
+        application.get( this.baseIdPath, restify.plugins.conditionalHandler( [
             { version: '1.0.0', handler: [ this.validateId, this.findById ] }
         ] ) );
 
-        application.post( this.locationsNode, restify.plugins.conditionalHandler( [
+        application.post( this.basePath, restify.plugins.conditionalHandler( [
             { version: '1.0.0', handler: this.save }
         ] ) );
 
-        application.put( this.locationsIdNode, restify.plugins.conditionalHandler( [
+        application.put( this.baseIdPath, restify.plugins.conditionalHandler( [
             { version: '1.0.0', handler: [ this.validateId, this.replace ] }
         ] ) );
 
-        application.patch( this.locationsIdNode, restify.plugins.conditionalHandler( [
+        application.patch( this.baseIdPath, restify.plugins.conditionalHandler( [
             { version: '1.0.0', handler: [ this.validateId, this.update ] }
         ] ) );
 
-        application.del( this.locationsIdNode, restify.plugins.conditionalHandler( [
+        application.del( this.baseIdPath, restify.plugins.conditionalHandler( [
             { version: '1.0.0', handler: [ this.validateId, this.delete ] }
         ] ) );
     }

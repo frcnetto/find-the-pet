@@ -8,9 +8,9 @@ export interface Pet extends mongoose.Document {
     size: any,
     age: any,
     color: any,
-    breed_id: any,
+    breed: any,
     picture_url: string,
-    location_id: any
+    location: any
 }
 
 const petsSchema = new Schema( {
@@ -26,9 +26,9 @@ const petsSchema = new Schema( {
         type: String,
         enum: values.colors
     },
-    breed_id: ObjectId,
+    breed: ObjectId,
     picture_url: String,
-    location_id: ObjectId
+    location: ObjectId
 } );
 
 export const Pet = mongoose.model<Pet>( 'Pet', petsSchema );

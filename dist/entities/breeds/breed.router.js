@@ -9,26 +9,24 @@ const model_router_1 = require("../../common/model-router");
 class BreedsRouter extends model_router_1.ModelRouter {
     constructor() {
         super(breed_model_1.Breed);
-        this.breedsNode = '/breeds';
-        this.breedsIdNode = this.breedsNode + '/:id';
     }
     applyRoutes(application) {
-        application.get(this.breedsNode, restify_1.default.plugins.conditionalHandler([
+        application.get(this.basePath, restify_1.default.plugins.conditionalHandler([
             { version: '1.0.0', handler: this.findAll }
         ]));
-        application.get(this.breedsIdNode, restify_1.default.plugins.conditionalHandler([
+        application.get(this.baseIdPath, restify_1.default.plugins.conditionalHandler([
             { version: '1.0.0', handler: [this.validateId, this.findById] }
         ]));
-        application.post(this.breedsNode, restify_1.default.plugins.conditionalHandler([
+        application.post(this.basePath, restify_1.default.plugins.conditionalHandler([
             { version: '1.0.0', handler: this.save }
         ]));
-        application.put(this.breedsIdNode, restify_1.default.plugins.conditionalHandler([
+        application.put(this.baseIdPath, restify_1.default.plugins.conditionalHandler([
             { version: '1.0.0', handler: [this.validateId, this.replace] }
         ]));
-        application.patch(this.breedsIdNode, restify_1.default.plugins.conditionalHandler([
+        application.patch(this.baseIdPath, restify_1.default.plugins.conditionalHandler([
             { version: '1.0.0', handler: [this.validateId, this.update] }
         ]));
-        application.del(this.breedsIdNode, restify_1.default.plugins.conditionalHandler([
+        application.del(this.baseIdPath, restify_1.default.plugins.conditionalHandler([
             { version: '1.0.0', handler: [this.validateId, this.delete] }
         ]));
     }

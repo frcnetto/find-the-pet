@@ -8,32 +8,29 @@ class BreedsRouter extends ModelRouter<Breed> {
         super( Breed );
     }
 
-    breedsNode = '/breeds';
-    breedsIdNode = this.breedsNode + '/:id';
-
     applyRoutes( application: restify.Server ) {
 
-        application.get( this.breedsNode, restify.plugins.conditionalHandler( [
+        application.get( this.basePath, restify.plugins.conditionalHandler( [
             { version: '1.0.0', handler: this.findAll }
         ] ) );
 
-        application.get( this.breedsIdNode, restify.plugins.conditionalHandler( [
+        application.get( this.baseIdPath, restify.plugins.conditionalHandler( [
             { version: '1.0.0', handler: [ this.validateId, this.findById ] }
         ] ) );
 
-        application.post( this.breedsNode, restify.plugins.conditionalHandler( [
+        application.post( this.basePath, restify.plugins.conditionalHandler( [
             { version: '1.0.0', handler: this.save }
         ] ) );
 
-        application.put( this.breedsIdNode, restify.plugins.conditionalHandler( [
+        application.put( this.baseIdPath, restify.plugins.conditionalHandler( [
             { version: '1.0.0', handler: [ this.validateId, this.replace ] }
         ] ) );
 
-        application.patch( this.breedsIdNode, restify.plugins.conditionalHandler( [
+        application.patch( this.baseIdPath, restify.plugins.conditionalHandler( [
             { version: '1.0.0', handler: [ this.validateId, this.update ] }
         ] ) );
 
-        application.del( this.breedsIdNode, restify.plugins.conditionalHandler( [
+        application.del( this.baseIdPath, restify.plugins.conditionalHandler( [
             { version: '1.0.0', handler: [ this.validateId, this.delete ] }
         ] ) );
     }
