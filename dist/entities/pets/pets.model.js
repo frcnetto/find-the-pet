@@ -20,8 +20,8 @@ const petsSchema = new Schema({
         type: String,
         enum: values_1.values.colors
     },
-    breed_id: ObjectId,
+    breed: ObjectId,
     picture_url: String,
-    location_id: ObjectId
+    location: ObjectId
 });
 exports.Pet = mongoose_1.default.model('Pet', petsSchema);

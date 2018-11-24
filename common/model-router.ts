@@ -5,8 +5,44 @@ import { NotFoundError } from "restify-errors";
 
 
 export abstract class ModelRouter<D extends mongoose.Document> extends Router {
+
+    basePath: string;
+    baseIdPath: string;
+    pageSize: number;
+
     constructor ( protected model: mongoose.Model<D> ) {
         super();
+        this.basePath = `/${this.model.collection.name}`;
+        this.baseIdPath = `/${this.basePath}/:id`;
+        this.pageSize = 10;
+    }
+
+    envelope( document: any ): any {
+        let resource = Object.assign( { _links: {} }, document.toJSON() );
+        resource._links.self = `${this.basePath}/${resource._id}`;
+        return resource;
+    }
+
+    envelopeAll( documents: any[], options: any = {} ) {
+        const resource: any = {
+            _links: {
+                previus: ``,
+                self: `${options.url}`,
+                next: ``
+            },
+            items: documents
+        }
+        if ( options.page && options.count, && options.pageSize ) {
+
+            if ( ( options.count - options.page * options.pageSize ) > 0 ) {
+                resource._links.next = `${this.basePath}?_page=${options.page + 1}`;
+            }
+
+            if ( options.page > 1 ) {
+                resource._links.previous = `${this.basePath}?_page=${options.page - 1}`;
+            }
+        }
+        return resource;
     }
 
     validateId = ( req: restify.Request, res: restify.Response, next: restify.Next ) => {
