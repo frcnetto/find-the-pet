@@ -1,4 +1,6 @@
 import restify from 'restify';
+import mongoose from 'mongoose';
+
 import { Pet } from './pets.model';
 import { ModelRouter } from '../../common/model-router';
 
@@ -6,6 +8,12 @@ class PetsRouter extends ModelRouter<Pet> {
 
     constructor () {
         super( Pet );
+    }
+
+    protected prepareOne( query: mongoose.DocumentQuery<Pet, Pet> ): mongoose.DocumentQuery<Pet, Pet> {
+        return query
+            .populate( 'breed' )
+            .populate( 'location' );
     }
 
     envelope( document: any ): any {
