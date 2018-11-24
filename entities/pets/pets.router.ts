@@ -13,17 +13,29 @@ class PetsRouter extends ModelRouter<Pet> {
 
     applyRoutes( application: restify.Server ) {
 
-        application.get( this.petsNode, this.findAll );
+        application.get( this.petsNode, restify.plugins.conditionalHandler( [
+            { version: '1.0.0', handler: this.findAll }
+        ] ) );
 
-        application.get( this.petsIdNode, [ this.validateId, this.findById ] );
+        application.get( this.petsIdNode, restify.plugins.conditionalHandler( [
+            { version: '1.0.0', handler: [ this.validateId, this.findById ] }
+        ] ) );
 
-        application.post( this.petsNode, this.save );
+        application.post( this.petsNode, restify.plugins.conditionalHandler( [
+            { version: '1.0.0', handler: this.save }
+        ] ) );
 
-        application.put( this.petsIdNode, [ this.validateId, this.replace ] );
+        application.put( this.petsIdNode, restify.plugins.conditionalHandler( [
+            { version: '1.0.0', handler: [ this.validateId, this.replace ] }
+        ] ) );
 
-        application.patch( this.petsIdNode, [ this.validateId, this.update ] );
+        application.patch( this.petsIdNode, restify.plugins.conditionalHandler( [
+            { version: '1.0.0', handler: [ this.validateId, this.update ] }
+        ] ) );
 
-        application.del( this.petsIdNode, [ this.validateId, this.delete ] );
+        application.del( this.petsIdNode, restify.plugins.conditionalHandler( [
+            { version: '1.0.0', handler: [ this.validateId, this.delete ] }
+        ] ) );
     }
 }
 

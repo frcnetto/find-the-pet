@@ -15,17 +15,29 @@ class UsersRouter extends ModelRouter<User> {
     }
 
     applyRoutes( application: restify.Server ) {
-        application.get( this.usersNode, this.findAll );
+        application.get( this.usersNode, restify.plugins.conditionalHandler( [
+            { version: '1.0.0', handler: this.findAll }
+        ] ) );
 
-        application.get( this.usersIdNode, [ this.validateId, this.findById ] );
+        application.get( this.usersIdNode, restify.plugins.conditionalHandler( [
+            { version: '1.0.0', handler: [ this.validateId, this.findById ] }
+        ] ) );
 
-        application.post( this.usersNode, this.save );
+        application.post( this.usersNode, restify.plugins.conditionalHandler( [
+            { version: '1.0.0', handler: this.save }
+        ] ) );
 
-        application.put( this.usersIdNode, [ this.validateId, this.replace ] );
+        application.put( this.usersIdNode, restify.plugins.conditionalHandler( [
+            { version: '1.0.0', handler: [ this.validateId, this.replace ] }
+        ] ) );
 
-        application.patch( this.usersIdNode, [ this.validateId, this.update ] );
+        application.patch( this.usersIdNode, restify.plugins.conditionalHandler( [
+            { version: '1.0.0', handler: [ this.validateId, this.update ] }
+        ] ) );
 
-        application.del( this.usersIdNode, [ this.validateId, this.delete ] );
+        application.del( this.usersIdNode, restify.plugins.conditionalHandler( [
+            { version: '1.0.0', handler: [ this.validateId, this.delete ] }
+        ] ) );
     }
 }
 

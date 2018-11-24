@@ -1,73 +1,36 @@
 "use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
-const router_1 = require("../../common/router");
+const restify_1 = __importDefault(require("restify"));
 const locations_model_1 = require("./locations.model");
-const restify_errors_1 = require("restify-errors");
-class LocationRouter extends router_1.Router {
+const model_router_1 = require("../../common/model-router");
+class LocationRouter extends model_router_1.ModelRouter {
     constructor() {
-        super(...arguments);
+        super(locations_model_1.Location);
         this.locationsNode = '/locations';
         this.locationsIdNode = this.locationsNode + '/:id';
     }
     applyRoutes(application) {
-        application.get(this.locationsNode, (req, res, next) => {
-            locations_model_1.Location.find()
-                .then(this.render(res, next))
-                .catch(next);
-        });
-        application.get(this.locationsIdNode, (req, res, next) => {
-            locations_model_1.Location.findById(req.params.id)
-                .then(this.render(res, next))
-                .catch(next);
-            ;
-        });
-        application.post(this.locationsNode, (req, res, next) => {
-            if (req.body instanceof Array) {
-                let locations = new locations_model_1.Location();
-                locations.collection.insert(req.body)
-                    .then(this.render(res, next))
-                    .catch(next);
-            }
-            else {
-                let location = new locations_model_1.Location(req.body);
-                location.save()
-                    .then(this.render(res, next))
-                    .catch(next);
-            }
-        });
-        application.put(this.locationsIdNode, (req, res, next) => {
-            const options = { overwrite: true };
-            locations_model_1.Location.update({ _id: req.params.id }, req.body, options)
-                .exec()
-                .then(result => {
-                if (result.n) {
-                    return locations_model_1.Location.findById(req.params.id);
-                }
-                else {
-                    throw new restify_errors_1.NotFoundError('Documento não encontrado.');
-                }
-            })
-                .then(this.render(res, next))
-                .catch(next);
-            ;
-        });
-        application.patch(this.locationsIdNode, (req, res, next) => {
-            const options = { new: true };
-            locations_model_1.Location.findByIdAndUpdate(req.params.id, req.body, options)
-                .then(this.render(res, next))
-                .catch(next);
-            ;
-        });
-        application.del(this.locationsIdNode, (req, res, next) => {
-            locations_model_1.Location.deleteOne({ _id: req.params.id }).exec().then(result => {
-                console.log(result);
-                if (result.n)
-                    res.send(204);
-                else
-                    throw new restify_errors_1.NotFoundError('Documento não encontrado.');
-                return next();
-            });
-        });
+        application.get(this.locationsNode, restify_1.default.plugins.conditionalHandler([
+            { version: '1.0.0', handler: this.findAll }
+        ]));
+        application.get(this.locationsIdNode, restify_1.default.plugins.conditionalHandler([
+            { version: '1.0.0', handler: [this.validateId, this.findById] }
+        ]));
+        application.post(this.locationsNode, restify_1.default.plugins.conditionalHandler([
+            { version: '1.0.0', handler: this.save }
+        ]));
+        application.put(this.locationsIdNode, restify_1.default.plugins.conditionalHandler([
+            { version: '1.0.0', handler: [this.validateId, this.replace] }
+        ]));
+        application.patch(this.locationsIdNode, restify_1.default.plugins.conditionalHandler([
+            { version: '1.0.0', handler: [this.validateId, this.update] }
+        ]));
+        application.del(this.locationsIdNode, restify_1.default.plugins.conditionalHandler([
+            { version: '1.0.0', handler: [this.validateId, this.delete] }
+        ]));
     }
 }
 exports.locationsRouter = new LocationRouter();

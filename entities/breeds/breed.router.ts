@@ -13,17 +13,29 @@ class BreedsRouter extends ModelRouter<Breed> {
 
     applyRoutes( application: restify.Server ) {
 
-        application.get( this.breedsNode, this.findAll );
+        application.get( this.breedsNode, restify.plugins.conditionalHandler( [
+            { version: '1.0.0', handler: this.findAll }
+        ] ) );
 
-        application.get( this.breedsIdNode, [ this.validateId, this.findById ] );
+        application.get( this.breedsIdNode, restify.plugins.conditionalHandler( [
+            { version: '1.0.0', handler: [ this.validateId, this.findById ] }
+        ] ) );
 
-        application.post( this.breedsNode, this.save );
+        application.post( this.breedsNode, restify.plugins.conditionalHandler( [
+            { version: '1.0.0', handler: this.save }
+        ] ) );
 
-        application.put( this.breedsIdNode, [ this.validateId, this.replace ] );
+        application.put( this.breedsIdNode, restify.plugins.conditionalHandler( [
+            { version: '1.0.0', handler: [ this.validateId, this.replace ] }
+        ] ) );
 
-        application.patch( this.breedsIdNode, [ this.validateId, this.update ] );
+        application.patch( this.breedsIdNode, restify.plugins.conditionalHandler( [
+            { version: '1.0.0', handler: [ this.validateId, this.update ] }
+        ] ) );
 
-        application.del( this.breedsIdNode, [ this.validateId, this.delete ] );
+        application.del( this.breedsIdNode, restify.plugins.conditionalHandler( [
+            { version: '1.0.0', handler: [ this.validateId, this.delete ] }
+        ] ) );
     }
 }
 

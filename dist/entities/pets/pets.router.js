@@ -1,73 +1,36 @@
 "use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
-const router_1 = require("../../common/router");
+const restify_1 = __importDefault(require("restify"));
 const pets_model_1 = require("./pets.model");
-const restify_errors_1 = require("restify-errors");
-class PetsRouter extends router_1.Router {
+const model_router_1 = require("../../common/model-router");
+class PetsRouter extends model_router_1.ModelRouter {
     constructor() {
-        super(...arguments);
+        super(pets_model_1.Pet);
         this.petsNode = '/pets';
         this.petsIdNode = this.petsNode + '/:id';
     }
     applyRoutes(application) {
-        application.get(this.petsNode, (req, res, next) => {
-            pets_model_1.Pet.find()
-                .then(this.render(res, next))
-                .catch(next);
-        });
-        application.get(this.petsIdNode, (req, res, next) => {
-            pets_model_1.Pet.findById(req.params.id)
-                .then(this.render(res, next))
-                .catch(next);
-            ;
-        });
-        application.post(this.petsNode, (req, res, next) => {
-            if (req.body instanceof Array) {
-                let pets = new pets_model_1.Pet();
-                pets.collection.insert(req.body)
-                    .then(this.render(res, next))
-                    .catch(next);
-            }
-            else {
-                let pet = new pets_model_1.Pet(req.body);
-                pet.save()
-                    .then(this.render(res, next))
-                    .catch(next);
-            }
-        });
-        application.put(this.petsIdNode, (req, res, next) => {
-            const options = { overwrite: true };
-            pets_model_1.Pet.update({ _id: req.params.id }, req.body, options)
-                .exec()
-                .then(result => {
-                if (result.n) {
-                    return pets_model_1.Pet.findById(req.params.id);
-                }
-                else {
-                    throw new restify_errors_1.NotFoundError('Documento não encontrado.');
-                }
-            })
-                .then(this.render(res, next))
-                .catch(next);
-            ;
-        });
-        application.patch(this.petsIdNode, (req, res, next) => {
-            const options = { new: true };
-            pets_model_1.Pet.findByIdAndUpdate(req.params.id, req.body, options)
-                .then(this.render(res, next))
-                .catch(next);
-            ;
-        });
-        application.del(this.petsIdNode, (req, res, next) => {
-            pets_model_1.Pet.deleteOne({ _id: req.params.id }).exec().then(result => {
-                console.log(result);
-                if (result.n)
-                    res.send(204);
-                else
-                    throw new restify_errors_1.NotFoundError('Documento não encontrado.');
-                return next();
-            });
-        });
+        application.get(this.petsNode, restify_1.default.plugins.conditionalHandler([
+            { version: '1.0.0', handler: this.findAll }
+        ]));
+        application.get(this.petsIdNode, restify_1.default.plugins.conditionalHandler([
+            { version: '1.0.0', handler: [this.validateId, this.findById] }
+        ]));
+        application.post(this.petsNode, restify_1.default.plugins.conditionalHandler([
+            { version: '1.0.0', handler: this.save }
+        ]));
+        application.put(this.petsIdNode, restify_1.default.plugins.conditionalHandler([
+            { version: '1.0.0', handler: [this.validateId, this.replace] }
+        ]));
+        application.patch(this.petsIdNode, restify_1.default.plugins.conditionalHandler([
+            { version: '1.0.0', handler: [this.validateId, this.update] }
+        ]));
+        application.del(this.petsIdNode, restify_1.default.plugins.conditionalHandler([
+            { version: '1.0.0', handler: [this.validateId, this.delete] }
+        ]));
     }
 }
 exports.petsRouter = new PetsRouter();
